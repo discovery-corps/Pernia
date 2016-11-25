@@ -5,7 +5,7 @@ import { DllReferencePlugin, HotModuleReplacementPlugin } from 'webpack';
 
 import { Common, DevServer, Output } from './variables';
 
-const threadPool = HappyPack.ThreadPool({size: 3});
+const threadPool = HappyPack.ThreadPool({ size: 3 });
 
 function makeHappyPlugin(id, loaders = false) {
   const tempDir = path.resolve('.happypack', 'caches', Common.cacheToken);

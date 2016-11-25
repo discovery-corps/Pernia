@@ -1,5 +1,6 @@
 import path from 'path';
 import md5File from 'md5-file';
+import { DefinePlugin, optimize, LoaderOptionsPlugin } from 'webpack';
 
 const cacheToken = `node:${process.env.NODE_ENV}_` +
   `babel:${process.env.BABEL_ENV || process.env.NODE_ENV}_` +
@@ -59,7 +60,60 @@ const DevServer = {
   }
 };
 
-const OptimizationPlugins = [];
+const OptimizationPlugins = [
+  new LoaderOptionsPlugin({
+    minimize: true,
+    debug: false
+  }),
+
+  new DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      BROWSER: JSON.stringify(true)
+    },
+    DEBUG: JSON.stringify(process.env.NODE_ENV !== 'production')
+  }),
+
+  new optimize.MinChunkSizePlugin({ minChunkSize: 50 * 1024 }),
+
+  new optimize.CommonsChunkPlugin({
+    children: true,
+    minChunks: 2,
+    async: true
+  }),
+
+  new optimize.UglifyJsPlugin({
+    sourceMap: false,
+    compress: {
+      keep_fnames: true,
+      unsafe: false,
+      warnings: false
+    },
+    mangle: {
+      screw_ie8: true
+    },
+    output: {
+      comments: false,
+      screw_ie8: true
+    }
+  }),
+
+  new optimize.UglifyJsPlugin({
+    sourceMap: false,
+    compress: {
+      keep_fnames: false,
+      unsafe: true,
+      warnings: false
+    },
+    mangle: {
+      screw_ie8: true
+    },
+    output: {
+      comments: false,
+      screw_ie8: true
+    }
+  })
+];
 
 const Output = {
   publicPath: '/public/',

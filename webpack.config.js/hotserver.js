@@ -10,7 +10,7 @@ import config from './index';
 
 const key = fs.readFileSync(path.join(__dirname, 'server.key'), 'utf8');
 const cert = fs.readFileSync(path.join(__dirname, 'server.crt'), 'utf8');
-const creds = {key, cert};
+const creds = { key, cert };
 
 const app = express();
 const compiler = webpack(config);
