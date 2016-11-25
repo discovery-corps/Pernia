@@ -34,6 +34,6 @@ server.listen(DevServer.port, (err) => {
   if(err) {
     console.error(err);
   } else {
-    console.log(`Listening at http://localhost:${DevServer.port}/`);
+    console.log(`Listening at https://localhost:${DevServer.port}/`);
   }
 });

@@ -8,11 +8,10 @@ function mount() {
 }
 
 if(module.hot) {
-  module.hot.accept('./helloworld', (...args) => {
+  module.hot.accept('./helloworld', () => {
     const NextApp = require('./helloworld').default; // eslint-disable-line
     render(<AppContainer><NextApp /></AppContainer>, document.getElementById('application')); // eslint-disable-line
 
-    console.log(args);
     mount();
   });
 }

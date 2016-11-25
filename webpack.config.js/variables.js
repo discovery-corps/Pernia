@@ -6,6 +6,9 @@ const cacheToken = `node:${process.env.NODE_ENV}_` +
   `babel:${process.env.BABEL_ENV || process.env.NODE_ENV}_` +
   `babelrc:${md5File.sync('.babelrc')}`;
 
+const cssModuleFormat = process.env.NODE_ENV !== 'production' ?
+  '[local]_[name]___[sha1:hash:base62:8]' : '[sha1:hash:base64:6]';
+
 const Common = {
   // probably don't need to change any of this
   cacheToken,
@@ -41,6 +44,12 @@ const Common = {
     url: {
       test: /\.(ttf|svg|otf|eot|woff2?|png|gif|jpe?g)$/,
       loader: 'url-loader?limit=500&name=js/[hash].[ext]'
+    },
+    sass: {
+      test: /\.scss$/,
+      loader: `css-loader?sourceMap&modules&importLoaders=1&localIdentName=${cssModuleFormat}` +
+        `!resolve-url-loader?sourceMap&root=${path.resolve('src/scss')}` +
+        '!sass-loader?sourceMap'
     }
   }
 };

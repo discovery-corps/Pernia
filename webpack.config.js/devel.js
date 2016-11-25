@@ -1,11 +1,16 @@
 import path from 'path';
 import fs from 'fs';
 import HappyPack from 'happypack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import { DllReferencePlugin, HotModuleReplacementPlugin } from 'webpack';
-
 import { Common, DevServer, Output } from './variables';
 
 const threadPool = HappyPack.ThreadPool({ size: 3 });
+const etp = new ExtractTextPlugin({
+  filename: 'css/app.css',
+  allChunks: false,
+  disable: true
+});
 
 function makeHappyPlugin(id, loaders = false) {
   const tempDir = path.resolve('.happypack', 'caches', Common.cacheToken);
@@ -63,6 +68,13 @@ export default {
         test: Common.loaders.json.test,
         exclude: Common.loaders.json.exclude,
         loader: 'happypack/loader?id=json'
+      },
+      {
+        test: Common.loaders.sass.test,
+        loader: etp.extract({
+          fallbackLoader: 'style-loader',
+          loader: 'happypack/loader?id=sass'
+        })
       }
     ]
   },
@@ -75,11 +87,13 @@ export default {
     makeHappyPlugin('babel', [Common.loaders.babel.loader]),
     makeHappyPlugin('json', [Common.loaders.json.loader]),
     makeHappyPlugin('url', [Common.loaders.url.loader]),
+    makeHappyPlugin('sass', [Common.loaders.sass.loader]),
     new DllReferencePlugin({
       context: '.',
       manifest: require(`${Output.path}/js/vendor-manifest.json`) // eslint-disable-line
     }),
-    new HotModuleReplacementPlugin()
+    new HotModuleReplacementPlugin(),
+    etp
   ],
   resolve: Common.resolve
 };
