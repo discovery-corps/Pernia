@@ -12,7 +12,7 @@
     "build-src-prd": "NODE_ENV=production node -r babel-register node_modules/.bin/webpack --progress --config=webpack.config.js/index.js",
     "build-js-dev": "npm run build-dll-dev && npm run build-src-dev",
     "build-js-prd": "npm run build-dll-prd && npm run build-src-prd",
-    "watch": "NODE_ENV=devel babel-node webpack.config.js/hotserver.js"
+    "watch": "npm run build-dll-dev && NODE_ENV=devel babel-node webpack.config.js/hotserver.js"
   },
   "author": "Edward Drapkin <EdwardDrapkin@gmail.com> (http://github.com/EdwardDrapkin/)",
   "license": "MIT",
